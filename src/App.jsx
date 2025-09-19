@@ -8,8 +8,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<SidebarLayout />}>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/inventory" element={<Inventory />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/" element={<Inventory />} />
         </Route>
       </Routes>
     </BrowserRouter>
