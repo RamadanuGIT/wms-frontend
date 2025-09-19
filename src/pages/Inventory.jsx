@@ -19,12 +19,13 @@ const Inventory = () => {
   const [editForm, setEditForm] = useState({});
   const [search, setSearch] = useState("");
 
+  const API_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:5000/api/inventory";
+
   // Fetch semua item
   const getAllItems = async () => {
     try {
-      const res = await fetch(
-        "https://wms-backend-production.up.railway.app/api/inventory"
-      );
+      const res = await fetch(API_URL);
       const data = await res.json();
       setItems(data.items);
     } catch (err) {
@@ -40,14 +41,11 @@ const Inventory = () => {
   const handleAdd = async (e) => {
     e.preventDefault();
     try {
-      await fetch(
-        "https://wms-backend-production.up.railway.app/api/inventory",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...form, stockAwal: Number(form.stockAwal) }),
-        }
-      );
+      await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, stockAwal: Number(form.stockAwal) }),
+      });
       setForm({ kodeBarang: "", namaBarang: "", satuan: "", stockAwal: 0 });
       setModalAdd(false);
       getAllItems();
@@ -64,14 +62,11 @@ const Inventory = () => {
 
   const saveEdit = async () => {
     try {
-      await fetch(
-        `https://wms-backend-production.up.railway.app/api/inventory/${editingId}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(editForm),
-        }
-      );
+      await fetch(`${API_URL}/${editingId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editForm),
+      });
       setEditingId(null);
       getAllItems();
     } catch (err) {
@@ -83,12 +78,9 @@ const Inventory = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Hapus item ini?")) return;
     try {
-      await fetch(
-        `https://wms-backend-production.up.railway.app/api/inventory/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
+      await fetch(`${API_URL}/${id}`, {
+        method: "DELETE",
+      });
       getAllItems();
     } catch (err) {
       console.error(err);
@@ -103,14 +95,11 @@ const Inventory = () => {
         ? { stockMasuk: transAmount }
         : { stockKeluar: transAmount };
     try {
-      await fetch(
-        `https://wms-backend-production.up.railway.app/api/inventory/${modalTrans.item._id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
+      await fetch(`${API_URL}/${modalTrans.item._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
       setModalTrans({ open: false, item: null, type: "" });
       setTransAmount(0);
       getAllItems();
